@@ -92,7 +92,7 @@ public class ManagerMenu implements OptionsMenu {
     private void displayAllAssignees() {
         List<Assignee> allAssignees = assigneeRepository.getAllAssignee();
         allAssignees.forEach(assignee -> {
-            System.out.println("Name: "+ assignee.getName()+" UserName: "+ assignee.getUsername());
+            System.out.println("Id: "+assignee.getId()+" Name: "+ assignee.getName()+" UserName: "+ assignee.getUsername());
         });
     }
 

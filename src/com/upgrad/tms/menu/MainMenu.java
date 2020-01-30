@@ -36,6 +36,7 @@ public class MainMenu {
             }
         } else {
             System.out.println("user not found with user name: " + username);
+            getLoginDetails();
         }
     }
 

@@ -53,6 +53,7 @@ public class ProjectManagerRepository {
         try {
             writer = new BufferedWriter(new FileWriter("manager.txt", true));
             String line = username+","+password;
+            writer.newLine();
             writer.write(line);
             writer.close();
         } catch (IOException e) {

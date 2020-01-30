@@ -24,7 +24,8 @@ public class ManagerMenu implements OptionsMenu {
         Scanner sc = new Scanner(System.in);
         System.out.println("1. Create new user");
         System.out.println("2. Display all users");
-        System.out.println("3. Exit");
+        System.out.println("3. Create another manager");
+        System.out.println("4. Exit");
         int choice = 0; //Invalid default value just to satisfy compiler, this will never reach switch
         try {
             choice = sc.nextInt();
@@ -43,11 +44,23 @@ public class ManagerMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 3:
+                createNewManager();
+                showTopOptions();
+                break;
+            case 4:
                 System.exit(0);
                 break;
             default:
                 wrongInput();
         }
+    }
+
+    private void createNewManager() {
+        Scanner sc = new Scanner(System.in);
+        String username = getUserName(sc);
+        System.out.println("Enter password");
+        String password = sc.nextLine();
+        managerRepository.saveManager(username, password);
     }
 
     private void acceptAssigneeCreation() {

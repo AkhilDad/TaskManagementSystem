@@ -1,8 +1,10 @@
 package com.upgrad.tms.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Task {
+public class Task implements Serializable {
+    private static final long serialVersionUID=201L;
     private Long id;
     private String title;
     private int priority;

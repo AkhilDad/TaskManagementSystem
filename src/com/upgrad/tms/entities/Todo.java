@@ -3,6 +3,7 @@ package com.upgrad.tms.entities;
 /**
  * This class represents Todo type tasks
  */
+//No need for serialization as superclass is serialized
 public class Todo extends Task {
     private String description;
 

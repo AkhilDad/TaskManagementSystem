@@ -2,6 +2,7 @@ package com.upgrad.tms.menu;
 
 import com.upgrad.tms.entities.Assignee;
 import com.upgrad.tms.repository.AssigneeRepository;
+import com.upgrad.tms.repository.ProjectManagerRepository;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
@@ -11,8 +12,11 @@ public class ManagerMenu implements OptionsMenu {
 
     private AssigneeRepository assigneeRepository;
 
+    private ProjectManagerRepository managerRepository;
+
     public ManagerMenu() throws IOException, ClassNotFoundException {
         assigneeRepository = AssigneeRepository.getInstance();
+        managerRepository = ProjectManagerRepository.getInstance();
     }
 
     public void showTopOptions() {
@@ -49,12 +53,26 @@ public class ManagerMenu implements OptionsMenu {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter name");
         String name = sc.nextLine();
-        System.out.println("Enter username");
-        String username = sc.nextLine();
+        String username = getUserName(sc);
         System.out.println("Enter password");
         String password = sc.nextLine();
         Assignee assignee = new Assignee(assigneeRepository.getAllAssignee().size() + 1, name, username, password);
         assigneeRepository.saveAssignee(assignee);
+    }
+
+    private String getUserName(Scanner sc) {
+        String finalUserName = null;
+        do {
+            System.out.println("Enter username");
+            String username = sc.nextLine();
+            Assignee existingAssignee = assigneeRepository.getAssignee(username);
+            if (existingAssignee != null || managerRepository.isManager(username)) {
+                System.out.println("Username already exists, Enter some other username");
+            } else {
+                finalUserName = username;
+            }
+        } while(finalUserName == null);
+        return finalUserName;
     }
 
     private void wrongInput() {

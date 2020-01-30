@@ -1,7 +1,6 @@
 package com.upgrad.tms.repository;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,11 +32,8 @@ public class ProjectManagerRepository {
                 managerCredentials.put(split[0], split[1]);
             }
             br.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found specific handling");
-            e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("General IO Exception handling");
+            System.out.println("IO Exception handling");
             e.printStackTrace();
         }
     }

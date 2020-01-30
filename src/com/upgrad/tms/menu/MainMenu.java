@@ -1,14 +1,19 @@
 package com.upgrad.tms.menu;
 
+import com.upgrad.tms.entities.Assignee;
+import com.upgrad.tms.repository.AssigneeRepository;
 import com.upgrad.tms.repository.ProjectManagerRepository;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MainMenu {
     private ProjectManagerRepository managerRepository;
+    private AssigneeRepository assigneeRepository;
 
-    public MainMenu() {
+    public MainMenu() throws IOException, ClassNotFoundException {
         managerRepository = ProjectManagerRepository.getInstance();
+        assigneeRepository = AssigneeRepository.getInstance();
     }
 
     public void show() {
@@ -35,8 +40,16 @@ public class MainMenu {
                 getLoginDetails();
             }
         } else {
-            System.out.println("user not found with user name: " + username);
-            getLoginDetails();
+            Assignee assignee = assigneeRepository.getAssignee(username);
+            if (assignee == null) {
+                System.out.println("user not found with user name: " + username);
+                getLoginDetails();
+            } else if (!assignee.getPassword().equals(password)) {
+                System.out.println("username and password do not match for username: " + username);
+                getLoginDetails();
+            } else {
+                showMenu(OptionsMenuType.ASSIGNEE);
+            }
         }
     }
 

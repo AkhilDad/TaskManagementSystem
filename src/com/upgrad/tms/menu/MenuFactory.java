@@ -2,12 +2,14 @@ package com.upgrad.tms.menu;
 
 import com.upgrad.tms.exception.NotFoundException;
 
+import java.io.IOException;
+
 /**
  * This class will return options menu concrete implementation based on option menu type.
  */
 public class MenuFactory {
 
-    public static OptionsMenu getMenuByType(OptionsMenuType optionsMenuType) {
+    public static OptionsMenu getMenuByType(OptionsMenuType optionsMenuType) throws IOException, ClassNotFoundException {
         switch (optionsMenuType){
             case PROJECT_MANAGER:
                 return new ManagerMenu();

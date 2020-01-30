@@ -1,11 +1,18 @@
 package com.upgrad.tms.menu;
 
+import com.upgrad.tms.entities.Assignee;
+import com.upgrad.tms.repository.AssigneeRepository;
+
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ManagerMenu implements OptionsMenu {
 
-    public ManagerMenu() {
+    private AssigneeRepository assigneeRepository;
+
+    public ManagerMenu() throws IOException, ClassNotFoundException {
+        assigneeRepository = AssigneeRepository.getInstance();
     }
 
     public void showTopOptions() {
@@ -22,6 +29,10 @@ public class ManagerMenu implements OptionsMenu {
         }
         switch (choice) {
             case 1:
+                acceptAssigneeCreation();
+                System.out.println("User created successfully");
+                showTopOptions();
+                break;
             case 2:
                 showAgain();
                 break;
@@ -32,6 +43,18 @@ public class ManagerMenu implements OptionsMenu {
                 wrongInput();
         }
 
+    }
+
+    private void acceptAssigneeCreation() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter name");
+        String name = sc.nextLine();
+        System.out.println("Enter username");
+        String username = sc.nextLine();
+        System.out.println("Enter password");
+        String password = sc.nextLine();
+        Assignee assignee = new Assignee(assigneeRepository.getAllAssignee().size() + 1, name, username, password);
+        assigneeRepository.saveAssignee(assignee);
     }
 
     private void wrongInput() {

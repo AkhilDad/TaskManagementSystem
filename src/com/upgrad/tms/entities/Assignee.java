@@ -1,10 +1,13 @@
 package com.upgrad.tms.entities;
 
+import java.io.Serializable;
+
 /**
  * This represents Assignee, which will do the task
  */
 
-public class Assignee {
+public class Assignee implements Serializable {
+    private static final long serialVersionUID=1L;
     //incremental user id given to the user
     private long id;
     //the name of the user

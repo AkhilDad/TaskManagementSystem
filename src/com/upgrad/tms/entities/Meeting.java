@@ -3,6 +3,7 @@ package com.upgrad.tms.entities;
 /**
  * This class represents meeting type Tasks
  */
+//No need for serialization as superclass is serialized
 public class Meeting extends Task {
     private String location;
     private String url;

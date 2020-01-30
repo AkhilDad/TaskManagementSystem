@@ -6,6 +6,7 @@ import com.upgrad.tms.repository.ProjectManagerRepository;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ManagerMenu implements OptionsMenu {
@@ -38,7 +39,8 @@ public class ManagerMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 2:
-                showAgain();
+                displayAllAssignees();
+                showTopOptions();
                 break;
             case 3:
                 System.exit(0);
@@ -46,7 +48,6 @@ public class ManagerMenu implements OptionsMenu {
             default:
                 wrongInput();
         }
-
     }
 
     private void acceptAssigneeCreation() {
@@ -73,6 +74,13 @@ public class ManagerMenu implements OptionsMenu {
             }
         } while(finalUserName == null);
         return finalUserName;
+    }
+
+    private void displayAllAssignees() {
+        List<Assignee> allAssignees = assigneeRepository.getAllAssignee();
+        allAssignees.forEach(assignee -> {
+            System.out.println("Name: "+ assignee.getName()+" UserName: "+ assignee.getUsername());
+        });
     }
 
     private void wrongInput() {

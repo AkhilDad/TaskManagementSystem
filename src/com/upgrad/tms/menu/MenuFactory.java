@@ -1,5 +1,7 @@
 package com.upgrad.tms.menu;
 
+import com.upgrad.tms.exception.NotFoundException;
+
 /**
  * This class will return options menu concrete implementation based on option menu type.
  */
@@ -12,8 +14,7 @@ public class MenuFactory {
             case ASSIGNEE:
                 return new AssigneeMenu();
         }
-        //here no return value we have
-        return null;
-
+        //here no return value we have, so we can't do anything, rather throw an exception
+        throw new NotFoundException("This OptionsMenuType not supported: "+ optionsMenuType);
     }
 }

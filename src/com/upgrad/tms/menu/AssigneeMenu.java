@@ -8,8 +8,10 @@ import com.upgrad.tms.util.DateUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class AssigneeMenu implements OptionsMenu {
@@ -46,6 +48,9 @@ public class AssigneeMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 3:
+                seeTaskSortedOnPriority();
+                showTopOptions();
+                break;
             case 4:
             case 5:
                 showAgain();
@@ -55,6 +60,27 @@ public class AssigneeMenu implements OptionsMenu {
                 break;
             default:
                 wrongInput();
+        }
+    }
+
+    private void seeTaskSortedOnPriority() {
+        if (MainMenu.loggedInUsername != null) {
+            Assignee assignee = assigneeRepository.getAssignee(MainMenu.loggedInUsername);
+            List<Task> taskList = assignee.getTaskCalendar().getTaskList();
+            PriorityQueue<Task> taskPriorityQueue = new PriorityQueue<>(new Comparator<Task>() {
+                @Override
+                public int compare(Task t1, Task t2) {
+                    return t1.getPriority() - t2.getPriority();
+                }
+            });
+            for (Task task : taskList) {
+                if (DateUtils.isSameDate(task.getDueDate(), Calendar.getInstance().getTime())) {
+                    taskPriorityQueue.add(task);
+                }
+            }
+            while (!taskPriorityQueue.isEmpty()) {
+                taskPriorityQueue.poll().printTaskOnConsole();
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.upgrad.tms.repository;
 import com.upgrad.tms.entities.Assignee;
 import com.upgrad.tms.entities.Task;
 import com.upgrad.tms.util.DateUtils;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,11 +14,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 public class AssigneeRepository {
@@ -94,5 +97,29 @@ public class AssigneeRepository {
             }
         }
         return filteredAssignees;
+    }
+
+    /**
+     * get all tasks in the system based on the priority
+     * @return
+     */
+    public PriorityQueue<Pair<Task, String>> getAllTaskAssigneePairByPriority() {
+        //using priority queue and passing comparator which will check on the priority of the task
+        PriorityQueue<Pair<Task, String>> priorityQueue = new PriorityQueue<>(new Comparator<Pair<Task, String>>() {
+            @Override
+            public int compare(Pair<Task, String> firstPair, Pair<Task, String> secondPair) {
+                return firstPair.getKey().getPriority() - secondPair.getKey().getPriority();
+            }
+        });
+
+        List<Assignee> allAssignee = getAllAssignee();
+        for (int i = 0; i < allAssignee.size(); i++) {
+            Assignee assignee = allAssignee.get(i);
+            List<Task> taskList = assignee.getTaskCalendar().getTaskList();
+            for (int j = 0; j < taskList.size(); j++) {
+                priorityQueue.add(new Pair<>(taskList.get(i), assignee.getUsername()));
+            }
+        }
+        return priorityQueue;
     }
 }

@@ -8,13 +8,16 @@ import com.upgrad.tms.entities.Todo;
 import com.upgrad.tms.repository.AssigneeRepository;
 import com.upgrad.tms.repository.ProjectManagerRepository;
 import com.upgrad.tms.util.DateUtils;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class ManagerMenu implements OptionsMenu {
@@ -35,7 +38,8 @@ public class ManagerMenu implements OptionsMenu {
         System.out.println("3. Create another manager");
         System.out.println("4. Create task and assign");
         System.out.println("5. Get all assignees who have a task on the given date");
-        System.out.println("6. Exit");
+        System.out.println("6. Get all tasks based on priority");
+        System.out.println("7. Exit");
         int choice = 0; //Invalid default value just to satisfy compiler, this will never reach switch
         try {
             choice = sc.nextInt();
@@ -66,10 +70,26 @@ public class ManagerMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 6:
+                getAllTaskBasedOnPriority();
+                showTopOptions();
+                break;
+            case 7:
                 System.exit(0);
                 break;
             default:
                 wrongInput();
+        }
+    }
+
+    private void getAllTaskBasedOnPriority() {
+        PriorityQueue<Pair<Task, String>> priorityQueue = assigneeRepository.getAllTaskAssigneePairByPriority();
+        Iterator<Pair<Task, String>> iterator = priorityQueue.iterator();
+        while (iterator.hasNext()) {
+            Pair<Task, String> pair = iterator.next();
+            Task task = pair.getKey();
+            System.out.println("Task priority: "+ task.getPriority()
+                    + " Title: "+task.getTitle()
+                    + " User: "+pair.getValue());
         }
     }
 

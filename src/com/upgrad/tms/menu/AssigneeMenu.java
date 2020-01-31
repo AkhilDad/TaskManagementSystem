@@ -3,8 +3,11 @@ package com.upgrad.tms.menu;
 import com.upgrad.tms.entities.Assignee;
 import com.upgrad.tms.entities.Task;
 import com.upgrad.tms.repository.AssigneeRepository;
+import com.upgrad.tms.util.DateUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -39,6 +42,9 @@ public class AssigneeMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 2:
+                seeTodayTasks();
+                showTopOptions();
+                break;
             case 3:
             case 4:
             case 5:
@@ -52,14 +58,36 @@ public class AssigneeMenu implements OptionsMenu {
         }
     }
 
+    private void seeTodayTasks() {
+        if (MainMenu.loggedInUsername != null) {
+            Assignee assignee = assigneeRepository.getAssignee(MainMenu.loggedInUsername);
+            List<Task> taskList = assignee.getTaskCalendar().getTaskList();
+            List<Task> todayTaskList = new ArrayList<>();
+            for (Task task : taskList) {
+                if (DateUtils.isSameDate(task.getDueDate(), Calendar.getInstance().getTime())) {
+                    todayTaskList.add(task);
+                }
+            }
+            if (todayTaskList.isEmpty()) {
+                System.out.println("Hurray! No task for today");
+            } else {
+                printTaskList(todayTaskList);
+            }
+        }
+    }
+
     private void seeAllTasks() {
         if (MainMenu.loggedInUsername != null) {
             Assignee assignee = assigneeRepository.getAssignee(MainMenu.loggedInUsername);
             List<Task> taskList = assignee.getTaskCalendar().getTaskList();
-            for (Task task : taskList) {
-                task.printTaskOnConsole();
-                System.out.println("\n");
-            }
+            printTaskList(taskList);
+        }
+    }
+
+    private void printTaskList(List<Task> taskList) {
+        for (Task task : taskList) {
+            task.printTaskOnConsole();
+            System.out.println("\n");
         }
     }
 }

@@ -233,15 +233,4 @@ public class ManagerMenu implements OptionsMenu {
             System.out.println("Id: "+assignee.getId()+" Name: "+ assignee.getName()+" UserName: "+ assignee.getUsername()+" Total tasks: "+assignee.getTaskCalendar().getTaskList().size());
         });
     }
-
-    private void wrongInput() {
-        System.out.println("Entered wrong choice, input again");
-        showTopOptions();
-    }
-
-    private void showAgain() {
-        System.out.println("Functionality under implementation");
-        showTopOptions();
-    }
-
 }

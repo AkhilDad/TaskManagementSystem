@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,7 +82,7 @@ public class AssigneeRepository {
     }
 
     public Collection<Assignee> getAllAssigneeForDueDate(Date dueDateForPendingUser) {
-        Set<Assignee> filteredAssignees = new HashSet<>();
+        Set<Assignee> filteredAssignees = new LinkedHashSet<>();
         List<Assignee> allAssignee = getAllAssignee();
         for (int i = 0; i < allAssignee.size(); i++) {
             Assignee assignee = allAssignee.get(i);

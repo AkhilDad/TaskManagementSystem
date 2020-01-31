@@ -25,15 +25,12 @@ public class ProjectManagerRepository {
 
     private void initManagerCredentials() {
         managerCredentials = new HashMap<>();
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader("manager.txt"));
+        try (BufferedReader br = new BufferedReader(new FileReader("manager.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] split = line.split(",");
                 managerCredentials.put(split[0], split[1]);
             }
-            br.close();
         } catch (IOException e) {
             System.out.println("IO Exception handling");
             e.printStackTrace();

@@ -117,6 +117,8 @@ public class ManagerMenu implements OptionsMenu {
         String title = sc.nextLine();
         System.out.println("Enter priority of the task [High-Low] [1-5]: ");
         int priority = sc.nextInt();
+        //Just to read \n from the previous nextInt() reading
+        sc.nextLine();
         Date dueDate = getDateFromUser(sc);
         task.setTitle(title);
         task.setPriority(priority);

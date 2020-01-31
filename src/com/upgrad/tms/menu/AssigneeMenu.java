@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class AssigneeMenu implements OptionsMenu {
 
@@ -70,7 +70,7 @@ public class AssigneeMenu implements OptionsMenu {
     }
 
     private void seeTaskByCategory() {
-        Map<String, List<Task>> listMap = new HashMap<>();
+        Map<String, List<Task>> listMap = new TreeMap<>();
         List<Class<? extends Task>> classTypes = List.of(Meeting.class, Todo.class);
         //init list for all classes there in classTypes
         for (Class<? extends Task> classType : classTypes) {
@@ -90,6 +90,9 @@ public class AssigneeMenu implements OptionsMenu {
 
         for (Map.Entry<String, List<Task>> listEntry : listMap.entrySet()) {
             System.out.println("======= Category: " + listEntry.getKey() + " =======");
+            if (listEntry.getValue().isEmpty()) {
+                System.out.println("No task in this category");
+            }
             for (Task task : listEntry.getValue()) {
                 task.printTaskOnConsole();
             }

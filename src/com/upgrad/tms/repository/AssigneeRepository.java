@@ -53,21 +53,25 @@ public class AssigneeRepository {
     }
 
     public Assignee saveAssignee(Assignee assignee) {
+        assigneeList.add(assignee);
+        usernameAssigneeMap.put(assignee.getUsername(), assignee);
+        updateListToFile();
+        return assignee;
+    }
+
+    public List<Assignee> getAllAssignee() {
+        return assigneeList;
+    }
+
+    public void updateListToFile() {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(new File("assignee.txt"));
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-            assigneeList.add(assignee);
-            usernameAssigneeMap.put(assignee.getUsername(), assignee);
             outputStream.writeObject(assigneeList);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return assignee;
-    }
-
-    public List<Assignee> getAllAssignee() {
-        return assigneeList;
     }
 }

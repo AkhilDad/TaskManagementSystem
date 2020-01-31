@@ -1,6 +1,8 @@
 package com.upgrad.tms.repository;
 
 import com.upgrad.tms.entities.Assignee;
+import com.upgrad.tms.entities.Task;
+import com.upgrad.tms.util.DateUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,5 +77,20 @@ public class AssigneeRepository {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Collection<Assignee> getAllAssigneeForDueDate(Date dueDateForPendingUser) {
+        List<Assignee> filteredAssignees = new ArrayList<>();
+        List<Assignee> allAssignee = getAllAssignee();
+        for (int i = 0; i < allAssignee.size(); i++) {
+            Assignee assignee = allAssignee.get(i);
+            List<Task> taskList = assignee.getTaskCalendar().getTaskList();
+            for (int j = 0; j < taskList.size(); j++) {
+                if (DateUtils.isSameDate(taskList.get(j).getDueDate(), dueDateForPendingUser)) {
+                    filteredAssignees.add(assignee);
+                }
+            }
+        }
+        return filteredAssignees;
     }
 }

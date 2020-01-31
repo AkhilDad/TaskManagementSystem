@@ -11,6 +11,7 @@ import com.upgrad.tms.util.DateUtils;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -33,7 +34,8 @@ public class ManagerMenu implements OptionsMenu {
         System.out.println("2. Display all users");
         System.out.println("3. Create another manager");
         System.out.println("4. Create task and assign");
-        System.out.println("5. Exit");
+        System.out.println("5. Get all assignees who have a task on the given date");
+        System.out.println("6. Exit");
         int choice = 0; //Invalid default value just to satisfy compiler, this will never reach switch
         try {
             choice = sc.nextInt();
@@ -60,11 +62,28 @@ public class ManagerMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 5:
+                getAssigneesForSpecificDate();
+                showTopOptions();
+                break;
+            case 6:
                 System.exit(0);
                 break;
             default:
                 wrongInput();
         }
+    }
+
+    private void getAssigneesForSpecificDate() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the due date for which you want to get all the users who have pending tasks");
+        Date dueDateForPendingUser = getDateFromUser(sc, DateUtils.DateFormat.DAY_MONTH_YEAR_SLASH_SEPARATED);
+        Collection<Assignee> assignees = assigneeRepository.getAllAssigneeForDueDate(dueDateForPendingUser);
+        if (assignees.isEmpty()) {
+            System.out.println("No assignees are there for the given due date");
+        }
+        assignees.forEach(assignee -> {
+            System.out.println("Id: " + assignee.getId() + " Name: " + assignee.getName() + " UserName: " + assignee.getUsername() + " Total tasks: " + assignee.getTaskCalendar().getTaskList().size());
+        });
     }
 
     private void createTaskAndAssign() {
@@ -119,20 +138,20 @@ public class ManagerMenu implements OptionsMenu {
         int priority = sc.nextInt();
         //Just to read \n from the previous nextInt() reading
         sc.nextLine();
-        Date dueDate = getDateFromUser(sc);
+        Date dueDate = getDateFromUser(sc, DateUtils.DateFormat.DAY_MONTH_YEAR_HOUR_MIN_SLASH_SEPARATED);
         task.setTitle(title);
         task.setPriority(priority);
         task.setDueDate(dueDate);
         task.setStatus(TaskStatus.PENDING);
     }
 
-    private Date getDateFromUser(Scanner sc) {
+    private Date getDateFromUser(Scanner sc, String dateFormat) {
         Date formattedDate = null;
         do {
-            System.out.println("Enter due date ["+DateUtils.DateFormat.DAY_MONTH_YEAR_HOUR_MIN_SLASH_SEPARATED +"]: ");
+            System.out.println("Enter due date ["+ dateFormat+"]: ");
             String dueDateString = sc.nextLine();
             try {
-                formattedDate = DateUtils.getFormattedDate(dueDateString, DateUtils.DateFormat.DAY_MONTH_YEAR_HOUR_MIN_SLASH_SEPARATED);
+                formattedDate = DateUtils.getFormattedDate(dueDateString, dateFormat);
             } catch (ParseException e) {
                 System.out.println("Wrong date format, Please enter correct date");
             }

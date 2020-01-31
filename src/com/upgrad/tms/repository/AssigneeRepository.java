@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AssigneeRepository {
 
@@ -80,7 +82,7 @@ public class AssigneeRepository {
     }
 
     public Collection<Assignee> getAllAssigneeForDueDate(Date dueDateForPendingUser) {
-        List<Assignee> filteredAssignees = new ArrayList<>();
+        Set<Assignee> filteredAssignees = new HashSet<>();
         List<Assignee> allAssignee = getAllAssignee();
         for (int i = 0; i < allAssignee.size(); i++) {
             Assignee assignee = allAssignee.get(i);

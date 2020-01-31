@@ -32,4 +32,11 @@ public class Meeting extends Task {
     public void setAgenda(String agenda) {
         this.agenda = agenda;
     }
+
+    @Override
+    public void printSubTaskProperties() {
+        System.out.println("Location: " + getLocation());
+        System.out.println("Url: " + getUrl());
+        System.out.println("Agenda: " + getAgenda());
+    }
 }

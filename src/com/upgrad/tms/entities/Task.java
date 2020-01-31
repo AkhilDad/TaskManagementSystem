@@ -1,10 +1,12 @@
 package com.upgrad.tms.entities;
 
+import com.upgrad.tms.util.DateUtils;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class Task implements Serializable {
-    private static final long serialVersionUID=201L;
+public abstract class Task implements Serializable {
+    private static final long serialVersionUID = 201L;
     private Long id;
     private String title;
     private int priority;
@@ -50,4 +52,21 @@ public class Task implements Serializable {
     public void setStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
+
+    public static String getTaskTypeString(Task task) {
+        String taskType = task instanceof Todo ? "Todo" : "Meeting";
+        return taskType;
+    }
+
+    public void printTaskOnConsole() {
+        String type = Task.getTaskTypeString(this);
+        System.out.println(type + " " + getId());
+        System.out.println("Title: " + getTitle());
+        System.out.println("Priority: " + getPriority());
+        System.out.println("Due Date: " + DateUtils.getFormattedDate(getDueDate(), DateUtils.DateFormat.DAY_MONTH_YEAR_HOUR_MIN_SLASH_SEPARATED));
+        System.out.println("Task Status: " + getTaskStatus());
+        printSubTaskProperties();
+    }
+
+    public abstract void printSubTaskProperties();
 }

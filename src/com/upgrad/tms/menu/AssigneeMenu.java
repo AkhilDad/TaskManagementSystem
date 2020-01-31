@@ -1,9 +1,21 @@
 package com.upgrad.tms.menu;
 
+import com.upgrad.tms.entities.Assignee;
+import com.upgrad.tms.entities.Task;
+import com.upgrad.tms.repository.AssigneeRepository;
+
+import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class AssigneeMenu implements OptionsMenu {
+
+    private AssigneeRepository assigneeRepository;
+
+    public AssigneeMenu() throws IOException, ClassNotFoundException {
+        assigneeRepository = AssigneeRepository.getInstance();
+    }
 
     public void showTopOptions() {
         Scanner sc = new Scanner(System.in);
@@ -23,6 +35,9 @@ public class AssigneeMenu implements OptionsMenu {
 
         switch (choice) {
             case 1:
+                seeAllTasks();
+                showTopOptions();
+                break;
             case 2:
             case 3:
             case 4:
@@ -30,12 +45,21 @@ public class AssigneeMenu implements OptionsMenu {
                 showAgain();
                 break;
             case 6:
-                System.exit(0);
+                MainMenu.exit();
                 break;
             default:
                 wrongInput();
         }
     }
 
-
+    private void seeAllTasks() {
+        if (MainMenu.loggedInUsername != null) {
+            Assignee assignee = assigneeRepository.getAssignee(MainMenu.loggedInUsername);
+            List<Task> taskList = assignee.getTaskCalendar().getTaskList();
+            for (Task task : taskList) {
+                task.printTaskOnConsole();
+                System.out.println("\n");
+            }
+        }
+    }
 }

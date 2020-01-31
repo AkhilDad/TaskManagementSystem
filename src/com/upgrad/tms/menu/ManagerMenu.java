@@ -15,7 +15,6 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.InputMismatchException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -74,7 +73,7 @@ public class ManagerMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 7:
-                System.exit(0);
+                MainMenu.exit();
                 break;
             default:
                 wrongInput();

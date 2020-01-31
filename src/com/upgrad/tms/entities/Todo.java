@@ -14,4 +14,9 @@ public class Todo extends Task {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public void printSubTaskProperties() {
+        System.out.println("Description: " + getDescription());
+    }
 }

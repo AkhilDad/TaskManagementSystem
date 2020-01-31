@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class MainMenu {
+    public static String loggedInUsername;
     private ProjectManagerRepository managerRepository;
     private AssigneeRepository assigneeRepository;
 
@@ -30,10 +31,24 @@ public class MainMenu {
         processInput(username, password);
     }
 
+    public static void exit() {
+        MainMenu.loggedInUsername = null;
+        System.exit(0);
+    }
+
+    private void showMenu(OptionsMenuType optionsMenuType) {
+        try {
+            MenuFactory.getMenuByType(optionsMenuType).showTopOptions();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     //this function will take care of what do be done with username and password
     private void processInput(String username, String password) {
         if (managerRepository.isManager(username)) {
             if (managerRepository.isValidManagerCredentials(username, password)) {
+                MainMenu.loggedInUsername = username;
                 showMenu(OptionsMenuType.PROJECT_MANAGER);
             } else {
                 System.out.println("username and password do not match for username: " + username);
@@ -48,16 +63,9 @@ public class MainMenu {
                 System.out.println("username and password do not match for username: " + username);
                 getLoginDetails();
             } else {
+                MainMenu.loggedInUsername = username;
                 showMenu(OptionsMenuType.ASSIGNEE);
             }
-        }
-    }
-
-    private void showMenu(OptionsMenuType optionsMenuType) {
-        try {
-            MenuFactory.getMenuByType(optionsMenuType).showTopOptions();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

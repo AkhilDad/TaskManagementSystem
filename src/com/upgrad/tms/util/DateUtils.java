@@ -26,6 +26,11 @@ public class DateUtils {
         }
     }
 
+    public static String getFormattedDate(Date date, String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        return formatter.format(date);
+    }
+
     public static boolean isSameDate(Date date1, Date date2) {
         Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(date1);

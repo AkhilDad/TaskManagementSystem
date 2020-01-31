@@ -83,9 +83,10 @@ public class ManagerMenu implements OptionsMenu {
 
     private void getAllTaskBasedOnPriority() {
         PriorityQueue<Pair<Task, String>> priorityQueue = assigneeRepository.getAllTaskAssigneePairByPriority();
-        Iterator<Pair<Task, String>> iterator = priorityQueue.iterator();
-        while (iterator.hasNext()) {
-            Pair<Task, String> pair = iterator.next();
+        //We can't use iterator in priority queue
+        //ref:https://stackoverflow.com/questions/8129122/how-to-iterate-over-a-priorityqueue
+        while (!priorityQueue.isEmpty()) {
+            Pair<Task, String> pair = priorityQueue.poll();
             Task task = pair.getKey();
             System.out.println("Task priority: "+ task.getPriority()
                     + " Title: "+task.getTitle()

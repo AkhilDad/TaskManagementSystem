@@ -1,7 +1,10 @@
 package com.upgrad.tms.menu;
 
 import com.upgrad.tms.entities.Assignee;
+import com.upgrad.tms.entities.Meeting;
 import com.upgrad.tms.entities.Task;
+import com.upgrad.tms.entities.Todo;
+import com.upgrad.tms.exception.NotFoundException;
 import com.upgrad.tms.repository.AssigneeRepository;
 import com.upgrad.tms.util.DateUtils;
 
@@ -9,8 +12,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -52,6 +57,7 @@ public class AssigneeMenu implements OptionsMenu {
                 showTopOptions();
                 break;
             case 4:
+                seeTaskByCategory();
             case 5:
                 showAgain();
                 break;
@@ -62,6 +68,35 @@ public class AssigneeMenu implements OptionsMenu {
                 wrongInput();
         }
     }
+
+    private void seeTaskByCategory() {
+        Map<String, List<Task>> listMap = new HashMap<>();
+        List<Class<? extends Task>> classTypes = List.of(Meeting.class, Todo.class);
+        //init list for all classes there in classTypes
+        for (Class<? extends Task> classType : classTypes) {
+            listMap.put(classType.getSimpleName(), new ArrayList<>());
+        }
+
+        Assignee assignee = assigneeRepository.getAssignee(MainMenu.loggedInUsername);
+        List<Task> taskList = assignee.getTaskCalendar().getTaskList();
+        for (Task task : taskList) {
+            List<Task> taskTypeList = listMap.get(task.getClass().getSimpleName());
+            if (taskTypeList != null) {
+                taskTypeList.add(task);
+            } else {
+                throw new NotFoundException("Task type not found");
+            }
+        }
+
+        for (Map.Entry<String, List<Task>> listEntry : listMap.entrySet()) {
+            System.out.println("======= Category: " + listEntry.getKey() + " =======");
+            for (Task task : listEntry.getValue()) {
+                task.printTaskOnConsole();
+            }
+            System.out.println("=======================");
+        }
+    }
+
 
     private void seeTaskSortedOnPriority() {
         if (MainMenu.loggedInUsername != null) {

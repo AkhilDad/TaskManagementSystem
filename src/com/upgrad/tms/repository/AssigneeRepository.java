@@ -9,19 +9,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class AssigneeRepository {
 
-    private Map<String, Assignee> usernameAssigneeMap;
-    private List<Assignee> assigneeList;
+    private Assignee[] assigneeList;
+    private int nextEmptyIndex;
 
     private static AssigneeRepository assigneeRepository;
 
     private AssigneeRepository() throws IOException, ClassNotFoundException {
+        assigneeList = new Assignee[10];
+        nextEmptyIndex = 0;
         initSubOrdinates();
     }
 
@@ -36,28 +34,39 @@ public class AssigneeRepository {
         FileInputStream fi = new FileInputStream(new File("assignee.txt"));
         if (fi.available() > 0) {
             ObjectInputStream oi = new ObjectInputStream(fi);
-            assigneeList = (List<Assignee>) oi.readObject();
+            Object obj;
+            //total objects should not be more than 10 as 10 is the maximum size
+            while ((obj = oi.readObject()) != null) {
+                assigneeList[nextEmptyIndex] = (Assignee) obj;
+                nextEmptyIndex++;
+                if (nextEmptyIndex > 10) {
+                    throw new OutOfMemoryError("Array size exceeded");
+                }
+            }
             oi.close();
-        } else {
-            assigneeList = new ArrayList<>();
-        }
-        usernameAssigneeMap = new HashMap<>();
-        for (Assignee assignee : assigneeList) {
-            usernameAssigneeMap.put(assignee.getUsername(), assignee);
         }
         fi.close();
     }
 
     public Assignee getAssignee(String username) {
-        return usernameAssigneeMap.get(username);
+        for (int i = 0; i < nextEmptyIndex; i++) {
+            if (assigneeList[i].getUsername().equals(username)) {
+                return assigneeList[i];
+            }
+        }
+        return null;
     }
 
     public Assignee saveAssignee(Assignee assignee) {
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(new File("assignee.txt"));
             ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-            assigneeList.add(assignee);
-            outputStream.writeObject(assigneeList);
+            assigneeList[nextEmptyIndex++] = assignee;
+            for (int i = 0; i < assigneeList.length; i++) {
+                outputStream.writeObject(assigneeList[i]);
+            }
+            //Adding null explicitly to mark close of objects
+            outputStream.writeObject(null);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -66,7 +75,11 @@ public class AssigneeRepository {
         return assignee;
     }
 
-    public List<Assignee> getAllAssignee() {
-        return assigneeList;
+    public Assignee[] getAllAssignee() {
+        Assignee[] assignees = new Assignee[nextEmptyIndex];
+        for (int i = 0; i < nextEmptyIndex; i++) {
+            assignees[i] = assigneeList[i];
+        }
+        return assignees;
     }
 }

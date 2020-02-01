@@ -53,7 +53,7 @@ public class ManagerMenu implements OptionsMenu {
         String username = sc.nextLine();
         System.out.println("Enter password");
         String password = sc.nextLine();
-        Assignee assignee = new Assignee(assigneeRepository.getAllAssignee().size() + 1, name, username, password);
+        Assignee assignee = new Assignee(assigneeRepository.getAllAssignee().length + 1, name, username, password);
         assigneeRepository.saveAssignee(assignee);
     }
 
